@@ -24,6 +24,8 @@ import {
 } from 'react-icons/fa';
 import styles from './uretim.css';
 import CreateOrder from './order-helper/order-form';
+import OrderDelete from './order-helper/delete-order';
+
 
 const UretimPlanlama = ({ data, currentPage, sortBy, sortOrder }) => {
     const { content, totalPages } = data;
@@ -71,15 +73,9 @@ const UretimPlanlama = ({ data, currentPage, sortBy, sortOrder }) => {
     };
 
     const handleOrderSuccess = () => {
-        
         setShowOrderForm(false);
-
-
+        window.location.reload(); // Reload page to reflect the changes after order creation
     };
-
-
-
-  
 
     return (
         <>
@@ -92,7 +88,10 @@ const UretimPlanlama = ({ data, currentPage, sortBy, sortOrder }) => {
                         </Button>
                     </div>
                     <div className="btn create">
-                        <Button type="submit"  onClick={() => setShowOrderForm(true)}>
+                        <Button
+                            type="submit"
+                            onClick={() => setShowOrderForm(true)}
+                        >
                             <FaPlus /> Create Order
                         </Button>
                     </div>
@@ -152,7 +151,7 @@ const UretimPlanlama = ({ data, currentPage, sortBy, sortOrder }) => {
                 <div className="table-responsive">
                     <Table striped bordered hover>
                         <thead>
-                            <tr className='table border-success'>
+                            <tr className="table border-success">
                                 <th></th>
                                 <th>Müşter Adı</th>
                                 <th>Gasan No</th>
@@ -212,14 +211,7 @@ const UretimPlanlama = ({ data, currentPage, sortBy, sortOrder }) => {
                                                 'İşlenmeyi Bekliyor' ||
                                             order.orderStatus == 'İşlenmekte') &
                                         (order.orderStatus !== 'Tamamlandi') ? (
-                                            <Button
-                                                variant="danger"
-                                                onClick={() =>
-                                                    onDelete(order.orderNumber)
-                                                }
-                                            >
-                                                <FaTrash />
-                                            </Button>
+                                            <OrderDelete orderNumber={order.orderNumber} />
                                         ) : null}
                                     </td>
                                 </tr>
@@ -242,32 +234,12 @@ const UretimPlanlama = ({ data, currentPage, sortBy, sortOrder }) => {
                 <Modal
                     show={showOrderForm}
                     onHide={() => setShowOrderForm(false)}
-                    
                 >
-                    <Modal.Header closeButton >
-                    </Modal.Header>
+                    <Modal.Header closeButton></Modal.Header>
                     <Modal.Body>
-                        <CreateOrder
-                            onSuccess={handleOrderSuccess}
-                        />
+                        <CreateOrder onSuccess={handleOrderSuccess} />
                     </Modal.Body>
                 </Modal>
-
-                {/* <OrderList
-                    orders={orders}
-                    onEdit={handleEditOrder}
-                    onDelete={handleDeleteOrder}
-                />
-                <Modal
-                    show={showOrderForm}
-                    onHide={() => setShowOrderForm(false)}
-                >
-                    <OrderForm
-                        order={editOrderData}
-                        onSuccess={fetchOrders}
-                        onClose={() => setShowOrderForm(false)}
-                    />
-                </Modal> */}
             </div>
         </>
     );

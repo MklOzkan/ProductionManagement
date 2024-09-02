@@ -54,6 +54,7 @@ export const updateOrder = async (orderNumber, orderData) => {
 };
 
 export const deleteOrder = async (orderNumber) => {
+    console.log('orderNumber======================', orderNumber);
     const response = await fetch(
         `${API_URL}/orders/deleteOrder/${orderNumber}`,
         {
