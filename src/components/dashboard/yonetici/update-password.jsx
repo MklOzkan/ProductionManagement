@@ -27,7 +27,7 @@ const UpdatePassword = () => {
     const [invalidPasswordMessage, setInvalidPasswordMessage] = useState('');
 
     const passwordRegex =
-        /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=*]).{8,}$/;
+        /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=*/_)!.,(§<>'-]).{8,}$/;
     const ErrorMessage =
         'Şifre en az bir rakam, bir küçük harf, bir büyük harf, bir özel karakter içermek zorunda ve en az 8 karakter uzunluğunda olmalı.';
 
@@ -90,7 +90,7 @@ const UpdatePassword = () => {
         <>
             <PageHeader>
                 <BackButton />
-                Şıfre Atama Ekranı <LogoutButton />
+                Şifre Atama Ekranı
             </PageHeader>
             <Spacer height={50} />
             <Container className="text-center m-auto">

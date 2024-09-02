@@ -1,18 +1,160 @@
 'use client';
 
 import React from 'react';
+import { Container, Row, Col, Table, Pagination, Form, Button } from 'react-bootstrap';
 import PageHeader from '@/components/common/page-header';
-import Logout from '@/components/common/form-fields/logout-button.jsx';
+import './talasli.scss';
 
-const TalasliPage = () => {
+const Order = ({ data, currentPage, sortBy, sortOrder }) => {
+    const { content, totalPages } = data;
+
+    // Handle sort change
+    const handleSortChange = (e) => {
+        const { name, value } = e.target;
+        const url = new URL(window.location);
+        if (name === 'sortBy') {
+            url.searchParams.set('sortBy', value);
+        } else if (name === 'sortOrder') {
+            url.searchParams.set('sortOrder', value);
+        }
+        window.location.href = url.toString();
+    };
+
+    // Handle reset
+    const handleReset = () => {
+        const url = new URL(window.location);
+        url.searchParams.set('sortBy', 'orderDate');
+        url.searchParams.set('sortOrder', 'desc');
+        url.searchParams.delete('currentPage'); // Optional: reset to first page
+        window.location.href = url.toString();
+    };
+
+    // Handle page change
+    const handlePageChange = (page) => {
+        const url = new URL(window.location);
+        url.searchParams.set('currentPage', page);
+        window.location.href = url.toString();
+    };
+
     return (
         <>
-            <PageHeader>
-                TALASLI İMALAT AMİRİ
-                <Logout />
-            </PageHeader>
+            <PageHeader>Talasli Imalat Amiri</PageHeader>
+            <Container fluid>
+                <Row className="my-3">
+                    <div className="d-flex gap-3">
+                        <Col md={2}>
+                            <Form.Group controlId="sortBy">
+                                <Form.Label>Sırala</Form.Label>
+                                <Form.Control
+                                    as="select"
+                                    name="sortBy"
+                                    value={sortBy}
+                                    onChange={handleSortChange}
+                                >
+                                    <option value="orderDate">
+                                        Sipariş Tarihi
+                                    </option>
+                                    <option value="deliveryDate">
+                                        Teslim Tarihi
+                                    </option>
+                                    <option value="orderNumber">
+                                        Sipaş No
+                                    </option>
+                                    <option value="customerName">
+                                        Müşteri Adı
+                                    </option>
+                                    {/* <option value="orderStaus">
+                                        Sipariş Durumu
+                                    </option> */}
+                                    {/* Add more options as needed */}
+                                </Form.Control>
+                            </Form.Group>
+                        </Col>
+                        <Col md={2}>
+                            <Form.Group controlId="sortOrder">
+                                <Form.Label>Siparişi Sırala</Form.Label>
+                                <Form.Control
+                                    as="select"
+                                    name="sortOrder"
+                                    value={sortOrder}
+                                    onChange={handleSortChange}
+                                >
+                                    <option value="asc">Artan</option>
+                                    <option value="desc">Azalan</option>
+                                </Form.Control>
+                            </Form.Group>
+                        </Col>
+                        <Col md={2}>
+                            <Button
+                                className="p-1"
+                                variant="secondary"
+                                onClick={handleReset}
+                            >
+                                Sıfırla
+                            </Button>
+                        </Col>
+                    </div>
+                </Row>
+                <div className="eachRow table-responsive">
+                    <Table striped bordered hover>
+                        <thead>
+                            <tr>
+                                <th>Müşter Adı</th>
+                                <th>Gasan No</th>
+                                <th>Sipariş No</th>
+                                <th>Sipariş Tarihi</th>
+                                <th>Teslim Tarihi</th>
+                                <th>Sipariş Türü</th>
+                                <th>Sipariş Adedi</th>
+                                <th>Sipariş Durumu</th>
+                                <th>Hazır Mil Adedi</th>
+                                <th>Başla/Durdur</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {content.map((order, index) => (
+                                <tr key={index} className="eachRow">
+                                    <td>{order.customerName}</td>
+                                    <td>{order.gasanNo}</td>
+                                    <td>{order.orderNumber}</td>
+                                    <td>{order.orderDate}</td>
+                                    <td>{order.deliveryDate}</td>
+                                    <td>{order.orderType}</td>
+                                    <td>{order.orderQuantity}</td>
+                                    <td>{order.orderStatus}</td>
+                                    <td>{order.readyMilCount}</td>
+                                    <td>
+                                        {order.orderStatus ===
+                                        'İşlenmeyi Bekliyor' ? (
+                                            <Button variant="primary">
+                                                Basla
+                                            </Button>
+                                        ) : order.orderStatus ===
+                                          'İşlenmekte' ? (
+                                            <Button variant="danger">
+                                                Durdur
+                                            </Button>
+                                        ) : null}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
+                </div>
+                <Pagination>
+                    {[...Array(totalPages).keys()].map((page) => (
+                        <Pagination.Item
+                            key={page}
+                            active={page === currentPage}
+                            onClick={() => handlePageChange(page)}
+                        >
+                            {page + 1}
+                        </Pagination.Item>
+                    ))}
+                </Pagination>
+            </Container>
         </>
     );
 };
 
-export default TalasliPage;
+export default Order;

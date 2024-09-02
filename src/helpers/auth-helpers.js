@@ -15,7 +15,7 @@ export const getAuthHeader = async () => {
             ...authHeader
         };
     }
-
+    console.log('Auth Header:', authHeader); 
     return authHeader;
 };
 
