@@ -1,39 +1,37 @@
 'use client';
 
 import React, { useState } from 'react';
-import {
-    Container,
-    Form,
-    Button,
-    Card,
-} from 'react-bootstrap';
-import { createOrderAction, updateOrderAction } from '@/actions/order-actions';
+import { Container, Form, Card, Modal } from 'react-bootstrap';
+import { createOrderAction, } from '@/actions/order-actions';
 import { swAlert } from '@/helpers/swal';
 import { initialResponse } from '@/helpers/form-validation';
-import { TextInput } from '@/components/common/form-fields';
+import { SubmitButton, TextInput } from '@/components/common/form-fields';
+import { useFormState } from "react-dom";
+import { useRouter } from 'next/navigation';
 
-const OrderForm = ({ onSuccess }) => {
-    const [state, setState] = useState(initialResponse); // Manage state locally
+const OrderForm = () => {
+    const [state, setState] = useState( initialResponse);
+    const router = useRouter();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
-        console.log('formData======================', formData);
-        try {
-            const result = await createOrderAction(formData);
+        setState(initialResponse);
 
-            if (result.ok) {
-                swAlert(result.message, 'success');
-                onSuccess();
-            } else {
-                setState(result); // Update the state with the result, which includes any errors
-            }
-        } catch (err) {
+        const response = await createOrderAction(formData);
+        setState(response);
+        console.log('response from order-form', response);
+        
+        if (response.ok) {
+            swAlert(response.message, 'success');
+            router.push('/dashboard/uretim');
+        } else if (state.message) {
+            
             swAlert(state.message, 'error');
-            console.error(err);
         }
-    };
 
+    };
+    
     return (
         <Container
             fluid
@@ -115,13 +113,7 @@ const OrderForm = ({ onSuccess }) => {
                             value={'İşlenmeyi Bekliyor'}
                             readOnly
                         />
-                        <Button
-                            variant="primary"
-                            type="submit"
-                            className="w-100"
-                        >
-                            Kaydet
-                        </Button>
+                        <SubmitButton />
                     </Form>
                 </Card.Body>
             </Card>

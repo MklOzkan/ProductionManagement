@@ -12,14 +12,14 @@ export const swConfirm = (
 	title,
 	icon = "info",
 	text = "",
-	confirmButtonText = "Yes"
+	confirmButtonText = "Onayla"
 ) => {
 	return Swal.fire({
 		title,
 		text,
 		icon,
 		showCancelButton: true,
-		confirmButtonText,
+		confirmButtonText
 	});
 };
 

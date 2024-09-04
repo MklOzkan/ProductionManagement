@@ -2,13 +2,6 @@ export const config = {
     api: {
         baseUrl: 'http://localhost:8080'
     },
-    project: {
-        name: 'Start School',
-        slogan: 'Right Time Right Now',
-        description:
-            'At Start Schools, we empower individuals with the skills and knowledge they need to thrive in the dynamic world of cloud technologies. Our comprehensive bootcamps equip you with the expertise to master essential cloud platforms like AWS, Azure, and Google Cloud Platform, enabling you to confidently navigate the ever-evolving landscape of cloud computing.',
-        version: '1.0.0'
-    },
     userRightsOnRoutes: [
         {
             urlRegex: /\/dashboard\/talasli-imalat-amiri$/,
@@ -51,9 +44,24 @@ export const config = {
             roles: ['Yonetici']
         },
         {
-            urlRegex:
-                /\/dashboard\/yonetici-menu\/update-password$/,
+            urlRegex: /\/dashboard\/yonetici-menu\/update-password$/,
             roles: ['Yonetici']
+        },
+        {
+            urlRegex: /\/dashboard\/uretim-planlama\/[0-9]+$/,
+            roles: ['UretimPlanlama']
+        },
+        {
+            urlRegex: /\/dashboard\/uretim\/[0-9]+$/,
+            roles: ['UretimPlanlama']
+        },
+        {
+            urlRegex: /\/dashboard\/uretim$/,
+            roles: ['UretimPlanlama']
+        },
+        {
+            urlRegex: /\/dashboard\/uretim\/new$/,
+            roles: ['UretimPlanlama']
         }
     ]
 };

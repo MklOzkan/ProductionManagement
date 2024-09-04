@@ -23,44 +23,30 @@ import {
 } from '@/components/common/form-fields';
 import { useRouter } from 'next/navigation';
 
-const OrderEdit = ({ order }) => {
-    //const [state, dispatch] = useFormState(createOrderAction, initialResponse);
-    const [state, setState] = useState(initialResponse); // Manage state locally
-    const router = useRouter();
+const OrderEdit = ({ order}) => {
+     const [state, setState] = useState(initialResponse);
+     const router = useRouter();
 
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault();
-    //     const formData = new FormData(e.target);
-    //     console.log('formData======================', formData);
-    //     const result = await dispatch(formData);
+     const handleSubmit = async (e) => {
+         e.preventDefault();
+         const formData = new FormData(e.target);
+         formData.append('id', order.id);
 
-    //     if (result.ok) {
-    //         swAlert(result.message, 'success');
-    //         router.push('/dashboard/uretim-planlama');
-    //     } else if (result.message) {
-    //         swAlert(result.message, 'error');
-    //     }
-    // };
+         try {
+             const result = await updateOrderAction(formData);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const formData = new FormData(e.target);
-        console.log('formData======================', formData);
-
-        try {
-            const result = await updateOrderAction(formData);
-
-            if (result.ok) {
-                swAlert(result.message, 'success');
-                onSuccess();
-            } else {
-                setState(result); // Update the state with the result, which includes any errors
-            }
-        } catch (err) {
-            swAlert(state.message, 'error');
-            console.error(err);
-        }
-    };
+             if (result.ok) {
+                 swAlert(result.message, 'success');
+                 router.push('/dashboard/urun-planlama'); // Navigate back after success
+             } else {
+                 setState(result); // Update the state with errors if any
+                 swAlert(result.message || 'Update failed', 'error');
+             }
+         } catch (err) {
+             swAlert(err.message || 'An error occurred', 'error');
+             console.error('Order update error:', err);
+         }
+     };
 
     return (
         <Container
@@ -72,6 +58,7 @@ const OrderEdit = ({ order }) => {
                 <Card.Body>
                     <Card.Title>Yeni Siparis</Card.Title>
                     <Form noValidate onSubmit={handleSubmit}>
+                        <input type="hidden" name='id' value={order.id}  />
                         <TextInput
                             type="text"
                             name="customerName"
